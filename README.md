@@ -1,77 +1,56 @@
 # Cardiovascular System Simulation + PID Control (MATLAB)
 
-MATLAB project that simulates a lumped-parameter cardiovascular system (left ventricle, arterial and venous compartments) and analyzes the aortic pressure response.  
-Part 2 extends the simulation with a disturbance (blood volume drop) and a PID controller to restore the mean aortic pressure.
+MATLAB project that simulates a simplified cardiovascular system and analyzes aortic pressure dynamics.
+Includes:
+1) Baseline hemodynamic simulation and event-based analysis (valve timing, EDV/ESV/SV, elastance modeling).
+2) Closed-loop control using a PID controller to stabilize mean aortic pressure under a blood-volume disturbance.
 
-## Technologies
-- MATLAB (scripts + local function)
-- Control concepts: PID (Proportional-Integral-Derivative)
-- Signal/physiology modeling: lumped-parameter cardiovascular model
+## Features
+- Time-domain simulation of LV / arterial / venous compartments (pressures, volumes, flows)
+- Aortic pressure (Pao) tracking across multiple cardiac cycles
+- Automatic detection of valve events (opening/closing)
+- Stroke volume calculation (EDV, ESV, SV)
+- Elastance modeling (linear reconstruction + comparison to sinusoidal elastance)
+- Disturbance simulation (sudden blood-volume drop)
+- PID control to reduce steady-state error and improve recovery dynamics
+
+## Repository structure
+- `proj_cardio_part1.m` - Baseline cardiovascular simulation + analysis (Q1-Q4 style outputs)
+- `final_proj_part2.m` - Disturbance + PID control experiments (Q5-Q6 style outputs)
 
 ## Requirements
-- MATLAB R2016b+ recommended (supports local functions inside scripts reliably)
-- No external toolboxes required (basic MATLAB is enough)
+- MATLAB R2020b+ (should also work on nearby versions)
+- No external toolboxes required (unless your MATLAB setup needs one for specific plotting)
 
-## Part 1 - Cardiovascular System Simulation
-**Goal:** Simulate pressures, volumes, and flows over multiple heart cycles and analyze Pao (aortic pressure).
+## How to run
 
-### What it does
-- Builds elastance curve for the left ventricle (systole/diastole).
-- Simulates:
-  - Volumes: `Vlv`, `Va`, `Vv`
-  - Pressures: `Plv`, `Pa`, `Pv`, `Pao`
-  - Flows: `Qlv`, `Qp`, `Qv`
-- Produces plots:
-  - Pao over time with peak markers
-  - Pressures in one cardiac cycle + valve events
-  - Vlv over one cardiac cycle (EDV/ESV/SV)
-  - Mean Pao vs blood volume percentage (BV%)
+### Part 1 - Baseline simulation and analysis
+1. Open MATLAB and set the working directory to the repository folder.
+2. Run:
+   - `proj_cardio_part1`
+3. Outputs:
+   - Plots for Pao over time (with cycle maxima)
+   - Single-cycle pressure plots with valve events
+   - LV volume plot with EDV/ESV and stroke volume
+   - Elastance plots (linear model + comparison)
 
-### Run
-1. Open MATLAB.
-2. Go to `part1/`.
-3. Run:
-   - `proj_cardio_part1.m`
+### Part 2 - Disturbance + PID control
+1. Run:
+   - `final_proj_part2`
+2. Outputs:
+   - Mean Pao vs. heart cycle number (with PID vs without PID)
+   - Metrics: steady-state error, undershoot, settling time, rise time
+   - Sensitivity plots showing the effect of Kp / Ki / Kd on mean Pao
 
-Outputs: figures + printed metrics (max Pao, stabilization cycle, time between peaks, EDV/ESV/SV, valve event times, BV sweep).
+## Notes
+- The model is a simplified lumped-parameter representation (not a full physiological model).
+- PID control is demonstrated as a feedback approach to compensate for a simulated bleeding disturbance.
 
-  ## Part 2 - Disturbance + PID Control
-  **Goal:** Apply a disturbance (sudden blood volume reduction) and compare mean Pao with and without PID.
-  
-  ### What it does
-  - Simulates 200 heart cycles.
-  - Introduces a disturbance at cycle 100: `disturbance` (e.g., 0.15 = 15% BV decrease).
-  - Computes mean Pao per cycle:
-    - Without control: `Kp=0, Ki=0, Kd=0`
-    - With PID: `Kp, Ki, Kd` tuned values
-  - Produces:
-    - Plot of mean Pao across cycles (with vs without PID)
-    - Performance metrics:
-      - steady-state error (before/after disturbance)
-      - undershoot (as defined in the analysis)
-      - settling time (heartbeats + seconds)
-      - rise time (10% to 90% after disturbance)
-    - Sensitivity plots for varying `Kp`, `Ki`, `Kd`
-  
-  ### Run
-  1. Open MATLAB.
-  2. Go to `part2/`.
-  3. Run:
-     - `final_proj_part2.m`
-  
-  Note: `final_proj_part2.m` includes a local function `Pao_part2_proj(...)` at the bottom. Keep it in the same file.
-  
-  ## Parameters You Can Edit
-  - Heart rate: `HR`
-  - Time step: `dt`
-  - Number of cycles: `Heart_cycles`
-  - Disturbance magnitude: `disturbance`
-  - PID gains: `Kp`, `Ki`, `Kd`
-  - Stabilization windows used for metrics (cycle ranges)
-  
-  ## Results 
-  - Part 1 shows convergence to a stable cardiac cycle and supports valve timing + PV-related analysis.
-  - Part 2 demonstrates how PID control improves recovery of mean aortic pressure after a sudden BV decrease, compared to the uncontrolled system.
-  
-  ## Notes
-  - If you get errors about local functions, ensure you are using a MATLAB version that supports functions at the end of scripts (R2016b+). Otherwise, move `Pao_part2_proj` into its own file `Pao_part2_proj.m`.
+## Technologies
+- MATLAB
+- Numerical simulation (ODE-like discrete time stepping)
+- Signal/metrics extraction (peaks, mean values, thresholds)
+- Control systems concepts (PID: proportional, integral, derivative)
+
+## License
+Add a license if needed (MIT is common for course projects).
